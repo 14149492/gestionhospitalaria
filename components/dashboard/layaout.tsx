@@ -7,7 +7,7 @@ import {
   SidebarTrigger, 
 } from "@/components/ui/sidebar" 
 import { Separator } from "@/components/ui/separator" 
-import { AppSidebar } from "@/components/dashboard/app-sidebar" 
+import AppSidebar from "@/components/dashboard/app-sidebar" 
 import { DashboardHeader } from "@/components/dashboard/header" 
 
   
