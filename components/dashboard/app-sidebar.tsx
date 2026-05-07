@@ -38,16 +38,9 @@ export default function AppSidebar({ rol, nombreUsuario }: AppSidebarProps) {
   const router = useRouter()
   const supabase = createClient()
  
-  const handleLogout = async () => {
-    try {
-      await supabase.auth.signOut({ scope: "local" })
-    } catch (_) {
-      // Ignorar errores del cliente
-    } finally {
-      // Llamar al endpoint server-side para limpiar la cookie de sesión
-      await fetch("/api/auth/signout", { method: "POST" }).catch(() => {})
-      window.location.href = "/login"
-    }
+  const handleLogout = () => {
+    // Navega al endpoint server-side que invalida la cookie y redirige a /login
+    window.location.href = "/api/auth/signout"
   }
  
   // Mapeo de nombres de rol para mostrar

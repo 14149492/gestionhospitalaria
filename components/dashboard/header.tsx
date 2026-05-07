@@ -46,16 +46,8 @@ export function DashboardHeader({
 
   
 
-  async function handleLogout() { 
-    const supabase = createClient() 
-    try {
-      await supabase.auth.signOut({ scope: "local" })
-    } catch (_) {
-      // Ignorar errores del cliente
-    } finally {
-      await fetch("/api/auth/signout", { method: "POST" }).catch(() => {})
-      window.location.href = "/login"
-    }
+  function handleLogout() { 
+    window.location.href = "/api/auth/signout"
   } 
 
   
