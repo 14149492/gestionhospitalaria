@@ -1,83 +1,57 @@
-import { createClient } from "@/lib/supabase/server"; 
-import { createClient as createServiceClient } from "@supabase/supabase-js"; 
-import { NextResponse } from "next/server"; 
+import { NextResponse } from "next/server"
+import { requireAuth } from "@/lib/supabase/auth-helper"
+import { createClient as createServiceClient } from "@supabase/supabase-js"
 
-export async function GET() { 
-  try { 
-    // 1. Verificar autenticación
-    const supabase = await createClient(); 
-    const { 
-      data: { user }, 
-    } = await supabase.auth.getUser(); 
- 
-    if (!user) { 
-      return NextResponse.json({ error: "No autenticado" }, { status: 401 }); 
-    } 
+function getServiceClient() {
+  return createServiceClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+}
 
-    // 2. Usar Service Role para listar pacientes (bypass RLS)
-    const supabaseAdmin = createServiceClient( 
-      process.env.NEXT_PUBLIC_SUPABASE_URL!, 
-      process.env.SUPABASE_SERVICE_ROLE_KEY! 
-    ); 
+export async function GET() {
+  const auth = await requireAuth()
+  if (auth.error) return auth.error
 
+  try {
+    const supabaseAdmin = getServiceClient()
     const { data: pacientes, error } = await supabaseAdmin
       .from("paciente")
       .select("*")
-      .order("created_at", { ascending: false }); 
-
-    if (error) { 
-      // Si created_at no existe, intentamos sin orden
-      const { data: pacientes2, error: error2 } = await supabaseAdmin
-        .from("paciente")
-        .select("*");
-      
-      if (error2) {
-        console.error("Error al listar pacientes:", error2); 
-        return NextResponse.json({ error: "Error al obtener pacientes" }, { status: 500 }); 
-      }
-      return NextResponse.json({ pacientes: pacientes2 });
-    } 
-
-    return NextResponse.json({ pacientes }); 
-  } catch (err) { 
-    console.error("Error inesperado:", err); 
-    return NextResponse.json( 
-      { error: "Error interno del servidor" }, 
-      { status: 500 } 
-    ); 
-  } 
-} 
-
-export async function POST(request: Request) {
-  try {
-    const supabase = await createClient();
-    const { data: { user } } = await supabase.auth.getUser();
-
-    if (!user) {
-      return NextResponse.json({ error: "No autenticado" }, { status: 401 });
-    }
-
-    const body = await request.json();
-
-    const supabaseAdmin = createServiceClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    );
-
-    const { data, error } = await supabaseAdmin
-      .from("paciente")
-      .insert([body])
-      .select()
-      .single();
+      .order("created_at", { ascending: false })
 
     if (error) {
-      console.error("Error al crear paciente:", error);
-      return NextResponse.json({ error: error.message }, { status: 500 });
+      const { data: pacientes2, error: error2 } = await supabaseAdmin.from("paciente").select("*")
+      if (error2) return NextResponse.json({ error: "Error al obtener pacientes" }, { status: 500 })
+      return NextResponse.json({ pacientes: pacientes2 })
     }
 
-    return NextResponse.json({ paciente: data });
-  } catch (err) {
-    console.error("Error inesperado:", err);
-    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 });
+    return NextResponse.json({ pacientes })
+  } catch {
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 })
   }
+}
+
+export async function POST(request: Request) {
+  const auth = await requireAuth(["admin", "operador"])
+  if (auth.error) return auth.error
+
+  try {
+    const body = await request.json()
+    const supabaseAdmin = getServiceClient()
+    const { data, error } = await supabaseAdmin.from("paciente").insert([body]).select().single()
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 })
+    return NextResponse.json({ paciente: data }, { status: 201 })
+  } catch {
+    return NextResponse.json({ error: "Error interno del servidor" }, { status: 500 })
+  }
+}
+
+// Métodos no permitidos sobre la colección completa
+export async function PUT() {
+  return NextResponse.json({ error: "Método no permitido — use /api/pacientes/[id]" }, { status: 405 })
+}
+
+export async function DELETE() {
+  return NextResponse.json({ error: "Método no permitido — use /api/pacientes/[id]" }, { status: 405 })
 }
