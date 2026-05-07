@@ -55,9 +55,13 @@ export async function PUT(request: Request) {
 }
 
 export async function POST() {
+  const auth = await requireAuth()
+  if (auth.error) return auth.error
   return NextResponse.json({ error: "Método no permitido" }, { status: 405 })
 }
 
 export async function DELETE() {
+  const auth = await requireAuth()
+  if (auth.error) return auth.error
   return NextResponse.json({ error: "Método no permitido" }, { status: 405 })
 }

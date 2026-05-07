@@ -49,5 +49,7 @@ export async function GET() {
 }
 
 export async function POST() {
+  const auth = await requireAuth()
+  if (auth.error) return auth.error
   return NextResponse.json({ error: "Método no permitido" }, { status: 405 })
 }

@@ -56,9 +56,13 @@ export async function POST(request: Request) {
 
 // Métodos no permitidos sobre la colección completa
 export async function PUT() {
+  const auth = await requireAuth()
+  if (auth.error) return auth.error
   return NextResponse.json({ error: "Método no permitido — use /api/pacientes/[id]" }, { status: 405 })
 }
 
 export async function DELETE() {
+  const auth = await requireAuth()
+  if (auth.error) return auth.error
   return NextResponse.json({ error: "Método no permitido — use /api/pacientes/[id]" }, { status: 405 })
 }

@@ -8,6 +8,9 @@ import { createClient as createServiceClient } from "@supabase/supabase-js"
  * Solo devuelve id y nombre — sin datos sensibles.
  */
 export async function GET() {
+  const auth = await requireAuth()
+  if (auth.error) return auth.error
+
   try {
     const supabaseAdmin = createServiceClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -31,11 +34,17 @@ export async function GET() {
 
 // Bloquear métodos no implementados
 export async function POST() {
+  const auth = await requireAuth()
+  if (auth.error) return auth.error
   return NextResponse.json({ error: "Método no permitido" }, { status: 405 })
 }
 export async function PUT() {
+  const auth = await requireAuth()
+  if (auth.error) return auth.error
   return NextResponse.json({ error: "Método no permitido" }, { status: 405 })
 }
 export async function DELETE() {
+  const auth = await requireAuth()
+  if (auth.error) return auth.error
   return NextResponse.json({ error: "Método no permitido" }, { status: 405 })
 }
