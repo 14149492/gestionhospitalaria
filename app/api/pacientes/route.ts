@@ -38,6 +38,13 @@ export async function POST(request: Request) {
 
   try {
     const body = await request.json()
+
+    // Validación básica de género
+    const generosValidos = ["M", "F"]
+    if (body.genero && !generosValidos.includes(body.genero)) {
+      return NextResponse.json({ error: "Género inválido (debe ser M o F)" }, { status: 400 })
+    }
+
     const supabaseAdmin = getServiceClient()
     const { data, error } = await supabaseAdmin.from("paciente").insert([body]).select().single()
     if (error) return NextResponse.json({ error: error.message }, { status: 500 })
