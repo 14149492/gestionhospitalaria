@@ -1,14 +1,15 @@
 import {
   BookOpen,
   ClipboardList,
-  GraduationCap,
   LayoutDashboard,
   Settings,
   Users,
   UserCircle, 
   Clock,
   UserCheck,
-  BarChart3            
+  BarChart3,
+  MapPin,
+  ShieldCheck            
 } from "lucide-react"
  
 export type NavItem = {
@@ -22,101 +23,69 @@ export type NavGroup = {
   items: NavItem[]
 }
  
-// Navegación para cada rol
+// Navegación para cada rol del Sistema de Vacunación PAI
 export const navigationConfig: Record<string, NavGroup[]> = {
-  estudiante: [
+  consulta: [
     {
-      label: "Principal",
+      label: "Visualización",
       items: [
-        { title: "Dashboard", url: "/estudiante", icon: LayoutDashboard },
-        { title: "Materias", url: "/estudiante/materias", icon: BookOpen },
-        {
-          title: "Mis Inscripciones",
-          url: "/estudiante/inscripciones",
-          icon: ClipboardList,
-        },
-         {
-          title: "Horarios",
-          url: "/estudiante/horarios",
-          icon: Clock,
-        },
-        {
-          title: "Asistencias",
-          url: "/estudiante/asistencias",
-          icon: UserCheck,
-        },
+        { title: "Resumen", url: "/consulta", icon: LayoutDashboard },
+        { title: "Estadísticas PAI", url: "/consulta/estadisticas", icon: BarChart3 },
+        { title: "Mapa Cobertura", url: "/consulta/mapa", icon: MapPin },
       ],
     },
     {
       label: "Cuenta",
       items: [
-        { title: "Mi Perfil", url: "/estudiante/perfil", icon: UserCircle },
-
+        { title: "Mi Perfil", url: "/consulta/perfil", icon: UserCircle },
       ],
     },
   ],
-  docente: [
+  operador: [
     {
-      label: "Principal",
+      label: "Vacunación",
       items: [
-        { title: "Dashboard", url: "/docente", icon: LayoutDashboard },
-        { title: "Mis Materias", url: "/docente/materias", icon: BookOpen },
-        {
-          title: "Horarios",
-          url: "/docente/horarios",
-          icon: Clock,
-        },
-        {
-          title: "Asistencias",
-          url: "/docente/asistencias",
-          icon: UserCheck,
-        },
-        {
-          title: "Evaluacion",
-          url: "/docente/evaluacion",
-          icon: BarChart3,
-        },
+        { title: "Panel Operativo", url: "/operador", icon: LayoutDashboard },
+        { title: "Registrar Paciente", url: "/operador/pacientes", icon: Users },
+        { title: "Nueva Vacunación", url: "/operador/registro", icon: ShieldCheck },
+        { title: "Historial de Aplicación", url: "/operador/historial", icon: ClipboardList },
+      ],
+    },
+    {
+      label: "Logística",
+      items: [
+        { title: "Vacunas Disponibles", url: "/operador/vacunas", icon: BookOpen },
+        { title: "Brigada Móvil", url: "/operador/brigada", icon: MapPin },
       ],
     },
     {
       label: "Cuenta",
       items: [
-        { title: "Mi Perfil", url: "/docente/perfil", icon: UserCircle },
+        { title: "Mi Perfil", url: "/operador/perfil", icon: UserCircle },
       ],
     },
   ],
   admin: [
     {
-      label: "Principal",
+      label: "Gestión PAI",
       items: [
-        { title: "Dashboard", url: "/admin", icon: LayoutDashboard },
-        { title: "Usuarios", url: "/admin/usuarios", icon: Users },
-        { title: "Materias", url: "/admin/materias", icon: BookOpen },
-        {
-          title: "Inscripciones",
-          url: "/admin/inscripciones",
-          icon: ClipboardList,
-        },
-        {
-          title: "Horarios",
-          url: "/admin/horarios",
-          icon: Clock,
-        },
-        {
-          title: "Asistencias",
-          url: "/admin/asistencias",
-          icon: UserCheck,
-        },
-        {
-          title: "Evaluacion",
-          url: "/admin/evaluacion",
-          icon: BarChart3,
-        },
+        { title: "Panel Control", url: "/admin", icon: LayoutDashboard },
+        { title: "Personal / Operadores", url: "/admin/usuarios", icon: Users },
+        { title: "Catálogo de Vacunas", url: "/admin/vacunas", icon: BookOpen },
+        { title: "Establecimientos", url: "/admin/establecimientos", icon: MapPin },
       ],
     },
     {
-      label: "Sistema",
+      label: "Reportes",
       items: [
+        { title: "Registros Globales", url: "/admin/registros", icon: ClipboardList },
+        { title: "Análisis de Datos", url: "/admin/analisis", icon: BarChart3 },
+      ],
+    },
+    {
+      label: "Cuenta",
+      items: [
+        { title: "Mi Perfil", url: "/admin/perfil", icon: UserCircle },
         { title: "Configuración", url: "/admin/config", icon: Settings },
       ],
     },

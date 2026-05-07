@@ -4,7 +4,15 @@ import { createClient } from "@/lib/supabase/server"
 import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
 import { Separator } from "@/components/ui/separator"
 import { TooltipProvider } from "@/components/ui/tooltip"
-import { AppSidebar } from "@/components/dashboard/app-sidebar"
+import AppSidebar from "@/components/dashboard/app-sidebar"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbPage,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
  
 export default async function DashboardLayout({
   children,
@@ -37,25 +45,24 @@ export default async function DashboardLayout({
   return (
     <TooltipProvider>
     <SidebarProvider>
-      <AppSidebar
-        rol={perfil.rol}
-        nombreUsuario={perfil.nombre_completo}
-      />
-      <SidebarInset>
-        {/* ─── Header del contenido ─── */}
-        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+      <AppSidebar rol={perfil.rol as any} nombreUsuario={perfil.nombre_completo} />
+      <SidebarInset className="bg-transparent">
+        <header className="flex h-16 shrink-0 items-center gap-2 px-6 bg-background/50 backdrop-blur-md sticky top-0 z-30 border-b border-primary/5">
           <SidebarTrigger className="-ml-1" />
-          <Separator
-            orientation="vertical"
-            className="mr-2 data-[orientation=vertical]:h-4"
-          />
-          <span className="text-sm text-muted-foreground">
-            {perfil.rol.charAt(0).toUpperCase() + perfil.rol.slice(1)}
-          </span>
+          <Separator orientation="vertical" className="mr-2 h-4 bg-primary/10" />
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink href="#" className="font-bold text-xs uppercase tracking-widest text-primary/60">Sistema PAI</BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage className="font-black text-xs uppercase tracking-widest">{perfil.rol}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
         </header>
- 
-        {/* ─── Contenido principal ─── */}
-        <main className="flex-1 p-6">
+        <main className="flex-1 overflow-y-auto px-6 py-8 md:px-10">
           {children}
         </main>
       </SidebarInset>

@@ -50,8 +50,8 @@ export async function proxy(request: NextRequest) {
     request.nextUrl.pathname.startsWith(route)
   )
  
-  // 5. Si no hay usuario y la ruta NO es pública
-  if (!user && !isPublicRoute && request.nextUrl.pathname !== "/") {
+  // 5. Si no hay usuario y la ruta NO es pública (y NO es una ruta de API)
+  if (!user && !isPublicRoute && request.nextUrl.pathname !== "/" && !request.nextUrl.pathname.startsWith("/api")) {
     const url = request.nextUrl.clone()
     url.pathname = "/login"
     return NextResponse.redirect(url)
@@ -70,11 +70,11 @@ export async function proxy(request: NextRequest) {
  
     if (perfil) {
       switch (perfil.rol) {
-        case "estudiante":
-          url.pathname = "/estudiante"
+        case "consulta":
+          url.pathname = "/consulta"
           break
-        case "docente":
-          url.pathname = "/docente"
+        case "operador":
+          url.pathname = "/operador"
           break
         case "admin":
           url.pathname = "/admin"

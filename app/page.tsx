@@ -30,7 +30,13 @@ export default async  function Home() {
     .single()
  
   if (perfil) {
-    redirect(`/${perfil.rol}`)
+    if (perfil.rol === "estudiante" || perfil.rol === "consulta") {
+      redirect("/consulta")
+    } else if (perfil.rol === "docente" || perfil.rol === "operador") {
+      redirect("/operador")
+    } else if (perfil.rol === "admin") {
+      redirect("/admin")
+    }
   }
  
   redirect("/login")
@@ -43,9 +49,9 @@ export default async  function Home() {
     <main className="flex min-h-screen items-center justify-center bg-background">
       <Card className="w-[400px]">
         <CardHeader>
-          <CardTitle className="text-2xl">Gestión Académica</CardTitle>
+          <CardTitle className="text-2xl">Sistema de Vacunación PAI</CardTitle>
           <CardDescription>
-            Sistema de gestión universitaria — UPDS
+            Sistema Nacional de Inmunización — Gestión Operativa
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">

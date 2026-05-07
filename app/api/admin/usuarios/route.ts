@@ -67,12 +67,8 @@ import { createClient } from "@/lib/supabase/server";
    
 
       const { data: usuarios, error } = await supabaseAdmin
-
         .from("usuarios_perfil")
-
-        .select("id, nombre_completo, rol, activo, created_at, updated_at")
-
-        .order("created_at", { ascending: false }); 
+        .select("id, nombre_completo, rol, activo");
 
    
 

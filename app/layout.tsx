@@ -9,8 +9,8 @@ const inter = Inter({
 })
  
 export const metadata: Metadata = {
-  title: "Gestión Académica",
-  description: "Sistema de gestión universitaria — UPDS",
+  title: "Sistema de Vacunación PAI",
+  description: "Sistema Nacional de Inmunización — Gestión Operativa",
 }
  
 export default function RootLayout({

@@ -10,7 +10,7 @@ const supabaseAdmin = createClient(
 export async function POST(request: Request) {
   try {
     const body = await request.json()
-    const { email, password, nombre_completo, rol, carrera } = body
+    const { email, password, nombre_completo, rol, establecimiento_id } = body
  
     // ─── Validación básica ───
     if (!email || !password || !nombre_completo || !rol) {
@@ -27,7 +27,7 @@ export async function POST(request: Request) {
       )
     }
  
-    const rolesValidos = ["estudiante", "docente", "admin"]
+    const rolesValidos = ["consulta", "operador", "admin"]
     if (!rolesValidos.includes(rol)) {
       return NextResponse.json(
         { error: "Rol no válido" },
@@ -40,7 +40,7 @@ export async function POST(request: Request) {
       await supabaseAdmin.auth.admin.createUser({
         email,
         password,
-        email_confirm: false, // El usuario debe confirmar por email
+        email_confirm: true, // Confirmado automáticamente
       })
  
     if (authError) {
@@ -53,11 +53,12 @@ export async function POST(request: Request) {
     // ─── 2. Crear perfil en la tabla usuarios_perfil ───
     const { error: profileError } = await supabaseAdmin
       .from("usuarios_perfil")
-      .insert({
+      .upsert({
         id: authData.user.id, // Mismo UUID que auth.users
         nombre_completo,
         rol,
-        carrera: carrera || null,
+        establecimiento_id: establecimiento_id || null,
+        activo: true
       })
  
     if (profileError) {
