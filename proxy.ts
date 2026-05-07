@@ -46,8 +46,17 @@ export async function proxy(request: NextRequest) {
     request.nextUrl.pathname.startsWith(route)
   )
  
-  // 5. Si no hay usuario y la ruta NO es pública (y NO es una ruta de API)
-  if (!user && !isPublicRoute && request.nextUrl.pathname !== "/" && !request.nextUrl.pathname.startsWith("/api")) {
+  // 5. Manejo de autenticación
+  if (!user && !isPublicRoute && request.nextUrl.pathname !== "/") {
+    // Si es una ruta de API, devolver 401 Unauthorized
+    if (request.nextUrl.pathname.startsWith("/api")) {
+      return NextResponse.json(
+        { error: "No autorizado" },
+        { status: 401 }
+      )
+    }
+
+    // Si es una ruta de página, redirigir a /login
     const url = request.nextUrl.clone()
     url.pathname = "/login"
     return NextResponse.redirect(url)

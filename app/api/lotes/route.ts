@@ -38,3 +38,24 @@ export async function GET() {
     ); 
   } 
 } 
+
+export async function POST() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  return NextResponse.json({ error: "Método no permitido" }, { status: 405 });
+}
+
+export async function PUT() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  return NextResponse.json({ error: "Método no permitido" }, { status: 405 });
+}
+
+export async function DELETE() {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return NextResponse.json({ error: "No autorizado" }, { status: 401 });
+  return NextResponse.json({ error: "Método no permitido" }, { status: 405 });
+}
