@@ -16,7 +16,7 @@ export async function proxy(request: NextRequest) {
         getAll() {
           return request.cookies.getAll()
         },
-        setAll(cookiesToSet, headers) {
+        setAll(cookiesToSet) {
           // Actualizar cookies en el request (para Server Components)
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
@@ -28,10 +28,6 @@ export async function proxy(request: NextRequest) {
           // Actualizar cookies en la respuesta (para el navegador)
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
-          )
-          // Sincronizar headers
-          Object.entries(headers).forEach(([key, value]) =>
-            supabaseResponse.headers.set(key, value)
           )
         },
       },

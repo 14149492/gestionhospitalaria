@@ -40,8 +40,7 @@ export default function AppSidebar({ rol, nombreUsuario }: AppSidebarProps) {
  
   const handleLogout = async () => {
     await supabase.auth.signOut()
-    router.push("/login")
-    router.refresh()
+    window.location.href = "/login"
   }
  
   // Mapeo de nombres de rol para mostrar

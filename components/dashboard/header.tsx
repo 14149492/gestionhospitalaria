@@ -49,8 +49,7 @@ export function DashboardHeader({
   async function handleLogout() { 
     const supabase = createClient() 
     await supabase.auth.signOut() 
-    router.push("/login") 
-    router.refresh() 
+    window.location.href = "/login"
   } 
 
   
